@@ -11,8 +11,59 @@ var inventory = new Inventory
     ]
 };
 
-// Display the inventory
-foreach (var product in inventory.Products)
+
+while ( true )
 {
-    System.Console.WriteLine($"Name: {product.Name}, Price: {product.Price}, Quantity: {product.Quantity}");
+    Menu();
+    var option = Console.ReadLine();
+    int i ;
+    
+    if ( option != null && int.TryParse( option, out i ) )
+    {
+        switch (i)
+        {
+            case 1:
+                // add new product
+                break;
+            case 2:
+                // view all products
+                break;
+            case 3:
+                // edit a product
+                break;
+            case 4:
+                // delete a product
+                break;
+            case 5:
+                // search a product
+                break;
+            case 6:
+                return;
+            default:
+                Console.WriteLine("Invalid Option !!! Try again.");
+                break;
+        }
+
+    }
+    else
+    {
+        Console.WriteLine("Invalid Option !!! Try again.");
+    }
+   
+}
+
+
+
+
+
+
+void Menu()
+{
+    Console.WriteLine("Enter your preferred option:\n" +
+                      "1. Add new product.\n" +
+                      "2. View all products.\n" +
+                      "3. Edit a product.\n" +
+                      "4. Delete a product.\n" +
+                      "5. Search for a product.\n" +
+                      "6. Exit.\n");
 }
