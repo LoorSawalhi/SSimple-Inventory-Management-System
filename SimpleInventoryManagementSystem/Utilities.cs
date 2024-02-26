@@ -1,16 +1,14 @@
-using System.Runtime.CompilerServices;
-
 namespace SimpleInventoryManagementSystem;
-using SimpleInventoryManagementSystem.Domain.InventoryManagement;
-using SimpleInventoryManagementSystem.Domain.ProductManagement;
+using Domain.InventoryManagement;
+using Domain.ProductManagement;
 
-public class Utilities
+public static class Utilities
 {
-    private static Inventory _inventory;
+    private static Inventory Inventory { get; set; } = new();
 
-    internal static void InitiallizeInventory()
+    internal static void InitializeInventory()
     {
-        _inventory = new Inventory
+        Inventory = new Inventory
         {
             Products =
             [
@@ -45,10 +43,10 @@ public class Utilities
             switch (i)
             {
                 case 1:
-                
+                    DisplayAddNewProductMenu();
                     break;
                 case 2:
-                    // view all products
+                   
                     break;
                 case 3:
                     // edit a product
@@ -63,6 +61,7 @@ public class Utilities
                     return;
                 default:
                     Console.WriteLine("Invalid Option !!! Try again.");
+                    Menu();
                     break;
             }
 
@@ -71,5 +70,84 @@ public class Utilities
         {
             Console.WriteLine("Invalid Option !!! Try again.");
         }
+    }
+
+    private static void DisplayAddNewProductMenu()
+    {
+        string name;
+        
+        do
+        {
+            Console.Write("Enter product name:");
+            name = Console.ReadLine() ?? string.Empty;
+
+            if (name.Length <= 0)
+            {
+                Console.WriteLine("Empty name field !! TRY AGAIN");
+            }
+        } 
+        while (name.Length <= 0);
+
+        
+        var p = Inventory.FindProduct( name );
+        
+        if ( p != null )
+        {
+          Console.WriteLine( "Product name already exists !!" );  
+          DisplayAddNewProductMenu();
+        }
+        else
+        {
+            var price = 0.0f;
+            var quantity = 0;
+            string input;
+
+            do
+            {
+                Console.Write("Enter product price: ");
+                input = Console.ReadLine() ?? string.Empty;
+
+                if (input.Length <= 0)
+                {
+                    Console.WriteLine("Empty price field! TRY AGAIN");
+                }
+                else if ( !float.TryParse(input, out price) || price <= 0 )
+                {
+                    if ((int)price == -1)
+                    {
+                        Menu();
+                    }
+                    
+                    Console.WriteLine("Invalid price! Price must be a number greater than 0. TRY AGAIN");
+                    input = ""; 
+                }
+            } while (input.Length <= 0);
+
+            input = "";
+
+            do
+            {
+                Console.Write("Enter product quantity: ");
+                input = Console.ReadLine() ?? string.Empty;
+
+                if (input.Length <= 0)
+                {
+                    Console.WriteLine("Empty quantity field! TRY AGAIN");
+                }
+                else if (!int.TryParse(input, out quantity) || quantity <= 0)
+                {
+                    Console.WriteLine("Invalid quantity! Quantity must be a number greater than 0. TRY AGAIN");
+                    input = ""; 
+                }
+            } while (input.Length <= 0);
+            
+
+            var product = new Product(name, price, quantity);
+            Inventory.AddNewProduct(product);
+            
+            Console.WriteLine("Product Added.");
+        }
+        
+        Menu();
     }
 }

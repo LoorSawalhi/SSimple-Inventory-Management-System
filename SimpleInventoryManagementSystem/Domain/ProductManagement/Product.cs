@@ -1,11 +1,22 @@
 namespace SimpleInventoryManagementSystem.Domain.ProductManagement;
 
-public class Product(string name, float price, int quantity)
+public class Product
 {
-    private string _name = name ;
-    private float _price = price;
-    private int _quantity = quantity;
+    private string _name;
+    private float _price;
+    private int _quantity;
 
+    public Product(string name)
+    {
+        Name = name;
+    }
+
+    public Product(string name, float price, int quantity)
+    {
+        _name = name;
+        _price = price;
+        _quantity = quantity;
+    }
 
     public string Name
     {
