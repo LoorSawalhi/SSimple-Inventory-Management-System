@@ -174,7 +174,7 @@ public static class Utilities
         while (true)
         {
             string name;
-            Product? p;
+            Product? p = null;
 
             do
             {
@@ -185,15 +185,14 @@ public static class Utilities
                 if (name.Length <= 0)
                 {
                     Console.WriteLine("Empty name field !! TRY AGAIN");
+                    continue;
                 }
 
                 p = Inventory.FindProduct(name);
 
-                if (p == null)
-                {
-                    name = "";
-                    Console.WriteLine("Product name doesn't exists !! TRY AGAIN");
-                }
+                if (p != null) continue;
+                name = "";
+                Console.WriteLine("Product name doesn't exists !! TRY AGAIN");
             } while (name.Length <= 0);
 
             Console.WriteLine("\nWhich field would you like to edit : \n" + "1. Name\n2. Price\n3. Quantity\n4.Exit\n");
@@ -230,7 +229,7 @@ public static class Utilities
 
     private static void EditProduct(int i, Product p)
     {
-        var input = "";
+        string input;
         switch (i)
         {
             case 1:
