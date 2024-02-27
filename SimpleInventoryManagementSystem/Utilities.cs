@@ -55,7 +55,7 @@ public static class Utilities
                         DisplayEditProductList();
                         break;
                     case 4:
-                        // delete a product
+                        DisplayDeleteProduct();
                         break;
                     case 5:
                         // search a product
@@ -169,6 +169,7 @@ public static class Utilities
         
         Menu();
     }
+    
     private static void DisplayEditProductList()
     {
         while (true)
@@ -334,5 +335,58 @@ public static class Utilities
         }
         
         Menu();
+    }
+
+    private static void DisplayDeleteProduct()
+    {
+        string name;
+        Product? p = null;
+
+        do
+        {
+            Console.WriteLine();
+            Console.Write("Enter product name : ");
+            name = Console.ReadLine() ?? string.Empty;
+
+            if (name.Length <= 0)
+            {
+                Console.WriteLine("Empty name field !! TRY AGAIN");
+                if (ExitCond() == -1)
+                {
+                    break;
+                }
+                continue;
+            }
+
+            p = Inventory.FindProduct(name);
+
+            if (p != null) continue;
+            
+            name = "";
+            Console.WriteLine("Product name doesn't exists !! TRY AGAIN");
+            if (ExitCond() == -1)
+            {
+                break;
+            }
+        } while (name.Length <= 0);
+
+        if( p != null)
+            Inventory.DeleteProduct(p);
+        
+        Console.WriteLine();
+        DisplayAllProducts();
+    }
+
+    //would like to implement this in the previous features but will keep it till the end to avoid conflicts
+    private static int ExitCond()
+    {
+        Console.Write("To exit type e or E => ");
+        var e = Console.ReadLine() ?? string.Empty;
+        if (e.ToLower().Trim().Equals("e"))
+        {
+            return -1;
+        }
+
+        return 0;
     }
 }
