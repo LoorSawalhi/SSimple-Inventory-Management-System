@@ -21,7 +21,7 @@ public class Product
     public string Name
     {
         get => _name;
-        set => _name = value;
+        set => _name = value.ToLower().Trim();
     }
 
     public float Price

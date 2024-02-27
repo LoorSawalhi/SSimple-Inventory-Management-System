@@ -24,53 +24,56 @@ public static class Utilities
             ]
         };
     }
-    
+
     internal static void Menu()
     {
-        Console.WriteLine("\nEnter your preferred option:\n" +
-                          "1. Add new product.\n" +
-                          "2. View all products.\n" +
-                          "3. Edit a product.\n" +
-                          "4. Delete a product.\n" +
-                          "5. Search for a product.\n" +
-                          "6. Exit.\n");
-        
-        Console.Write("Option = ");
-        
-        var option = Console.ReadLine();
-        int i ;
-    
-        if ( option != null && int.TryParse( option, out i ) )
+        while (true)
         {
-            switch (i)
+            Console.WriteLine("\nEnter your preferred option:\n" + 
+                              "1. Add new product.\n" + 
+                              "2. View all products.\n" + 
+                              "3. Edit a product.\n" + 
+                              "4. Delete a product.\n" + 
+                              "5. Search for a product.\n" + 
+                              "6. Exit.\n");
+            
+            Console.Write("Option = ");
+
+            var option = Console.ReadLine();
+
+            if (option != null && int.TryParse(option, out var i))
             {
-                case 1:
-                    DisplayAddNewProductMenu();
-                    break;
-                case 2:
-                    DisplayAllProducts();
-                    break;
-                case 3:
-                    // edit a product
-                    break;
-                case 4:
-                    // delete a product
-                    break;
-                case 5:
-                    // search a product
-                    break;
-                case 6:
-                    return;
-                default:
-                    Console.WriteLine("Invalid Option !!! Try again.");
-                    Menu();
-                    break;
+                switch (i)
+                {
+                    case 1:
+                        DisplayAddNewProductMenu();
+                        break;
+                    case 2:
+                        DisplayAllProducts();
+                        break;
+                    case 3:
+                        DisplayEditProductList();
+                        break;
+                    case 4:
+                        // delete a product
+                        break;
+                    case 5:
+                        // search a product
+                        break;
+                    case 6:
+                        return;
+                    default:
+                        Console.WriteLine("Invalid Option !!! Try again.");
+                        continue;
+                }
+            }
+            else
+            {
+                Console.WriteLine("Invalid Option !!! Try again.");
+                continue;
             }
 
-        }
-        else
-        {
-            Console.WriteLine("Invalid Option !!! Try again.");
+            break;
         }
     }
 
@@ -162,6 +165,172 @@ public static class Utilities
         {
             Console.WriteLine( i + ". " + product.ToString() );
             i += 1;
+        }
+        
+        Menu();
+    }
+    private static void DisplayEditProductList()
+    {
+        while (true)
+        {
+            string name;
+            Product? p;
+
+            do
+            {
+                Console.WriteLine();
+                Console.Write("Enter product name : ");
+                name = Console.ReadLine() ?? string.Empty;
+
+                if (name.Length <= 0)
+                {
+                    Console.WriteLine("Empty name field !! TRY AGAIN");
+                }
+
+                p = Inventory.FindProduct(name);
+
+                if (p == null)
+                {
+                    name = "";
+                    Console.WriteLine("Product name doesn't exists !! TRY AGAIN");
+                }
+            } while (name.Length <= 0);
+
+            Console.WriteLine("\nWhich field would you like to edit : \n" + "1. Name\n2. Price\n3. Quantity\n4.Exit\n");
+            Console.Write("Option = ");
+            
+            var option = Console.ReadLine();
+            
+            Console.WriteLine();
+
+            if (option != null && int.TryParse(option, out var i))
+            {
+                switch (i)
+                {
+                    case < 4 and > 0:
+                        if (p != null) EditProduct(i, p);
+                        break;
+                    case 4:
+                        Menu();
+                        break;
+                    default:
+                        Console.WriteLine("Invalid Option !!! Try again.");
+                        continue;
+                }
+            }
+            else
+            {
+                Console.WriteLine("Invalid Option !!! Try again.");
+                continue;
+            }
+
+            break;
+        }
+    }
+
+    private static void EditProduct(int i, Product p)
+    {
+        var input = "";
+        switch (i)
+        {
+            case 1:
+            {
+                do
+                {
+                    Console.Write("Enter New Name : ");
+                    input = Console.ReadLine() ?? string.Empty;
+                    
+                    Console.WriteLine();
+                    
+                    if (input.Length <= 0)
+                    {
+                        Console.WriteLine("Empty name field! TRY AGAIN");
+                    }
+                } while ( input.Length <= 0 );
+
+                if (input.ToLower().Trim().Equals(p.Name))
+                {
+                    Console.WriteLine( "You entered the same name, nothing have changed!" );
+                } 
+                else
+                {
+                    p.Name = input;
+                    Console.WriteLine("Name Updated!");
+                }
+                
+                Console.WriteLine(p.ToString());
+                break;
+            }
+            case 2:
+            {
+                var price = 0.0f;
+                
+                do
+                {
+                    Console.Write("Enter new price : ");
+                    input = Console.ReadLine() ?? string.Empty;
+                    
+                    Console.WriteLine();
+
+                    if (input.Length <= 0)
+                    {
+                        Console.WriteLine("Empty price field! TRY AGAIN");
+                    }
+                    else if ( !float.TryParse(input, out price) || price <= 0 )
+                    {
+                        Console.WriteLine("Invalid price! Price must be a number greater than 0. TRY AGAIN");
+                        input = ""; 
+                    }
+                } while (input.Length <= 0);
+
+                if (Math.Abs(price - p.Price) < 0.00001)
+                {
+                    Console.WriteLine( "You entered the same price, nothing have changed!" );
+                }
+                else
+                {
+                    p.Price = price;
+                    Console.WriteLine("Price Updated!");
+                }
+                
+                Console.WriteLine(p.ToString());
+                break;
+            }
+            case 3:
+            {
+                var quantity = 0;
+                
+                do
+                {
+                    Console.Write("Enter new quantity : ");
+                    input = Console.ReadLine() ?? string.Empty;
+                    
+                    Console.WriteLine();
+                    
+                    if (input.Length <= 0)
+                    {
+                        Console.WriteLine("Empty quantity field! TRY AGAIN");
+                    }
+                    else if ( !int.TryParse(input, out quantity) || quantity <= 0 )
+                    {
+                        Console.WriteLine("Invalid quantity! Quantity must be a number greater than 0. TRY AGAIN");
+                        input = ""; 
+                    }
+                } while (input.Length <= 0);
+                
+                if (quantity == p.Quantity)
+                {
+                    Console.WriteLine( "You entered the same quantity, nothing have changed!" );
+                }
+                else
+                {
+                    p.Quantity = quantity;
+                    Console.WriteLine("Quantity Updated!");
+                }
+                
+                Console.WriteLine(p.ToString());
+                break;
+            }
         }
         
         Menu();
