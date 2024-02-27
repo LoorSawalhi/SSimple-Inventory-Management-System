@@ -27,13 +27,15 @@ public static class Utilities
     
     internal static void Menu()
     {
-        Console.WriteLine("Enter your preferred option:\n" +
+        Console.WriteLine("\nEnter your preferred option:\n" +
                           "1. Add new product.\n" +
                           "2. View all products.\n" +
                           "3. Edit a product.\n" +
                           "4. Delete a product.\n" +
                           "5. Search for a product.\n" +
                           "6. Exit.\n");
+        
+        Console.Write("Option = ");
         
         var option = Console.ReadLine();
         int i ;
@@ -46,7 +48,7 @@ public static class Utilities
                     DisplayAddNewProductMenu();
                     break;
                 case 2:
-                   
+                    DisplayAllProducts();
                     break;
                 case 3:
                     // edit a product
@@ -146,6 +148,20 @@ public static class Utilities
             Inventory.AddNewProduct(product);
             
             Console.WriteLine("Product Added.");
+        }
+        
+        Menu();
+    }
+    
+    private static void DisplayAllProducts()
+    {
+        var i = 1;
+        Console.WriteLine("Inventory Products:");
+        
+        foreach (var product in Inventory.Products)
+        {
+            Console.WriteLine( i + ". " + product.ToString() );
+            i += 1;
         }
         
         Menu();

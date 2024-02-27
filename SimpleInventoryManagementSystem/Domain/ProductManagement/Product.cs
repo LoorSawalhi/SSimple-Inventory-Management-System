@@ -43,4 +43,9 @@ public class Product
                 _quantity = value;
         }
     }
+
+    public override string ToString()
+    {
+        return "Name : " + Name + ", Price : " + Price + ", Quantity : " + Quantity + ".";
+    }
 }
