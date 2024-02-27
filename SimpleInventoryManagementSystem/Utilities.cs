@@ -58,7 +58,7 @@ public static class Utilities
                         DisplayDeleteProduct();
                         break;
                     case 5:
-                        // search a product
+                        DisplaySearchProduct();
                         break;
                     case 6:
                         return;
@@ -388,5 +388,43 @@ public static class Utilities
         }
 
         return 0;
+    }
+
+    private static void DisplaySearchProduct()
+    {
+        string name;
+        Product? p = null;
+
+        do
+        {
+            Console.WriteLine();
+            Console.Write("Enter product name : ");
+            name = Console.ReadLine() ?? string.Empty;
+
+            if (name.Length <= 0)
+            {
+                Console.WriteLine("Empty name field !! TRY AGAIN");
+                if (ExitCond() == -1)
+                {
+                    break;
+                }
+                continue;
+            }
+
+            p = Inventory.FindProduct(name);
+
+            if (p != null) continue;
+            
+            name = "";
+            Console.WriteLine("Product name doesn't exists !! TRY AGAIN");
+            
+            if (ExitCond() == -1)
+            {
+                break;
+            }
+        } while (name.Length <= 0);
+
+        Console.WriteLine(p?.ToString());
+        Menu();
     }
 }
