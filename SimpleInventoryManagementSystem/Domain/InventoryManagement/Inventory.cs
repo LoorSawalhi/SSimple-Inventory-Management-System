@@ -1,4 +1,5 @@
 using SimpleInventoryManagementSystem.Domain.ProductManagement;
+
 namespace SimpleInventoryManagementSystem.Domain.InventoryManagement;
 
 public class Inventory
@@ -24,5 +25,4 @@ public class Inventory
         Products.Add(product);
         return Products;
     }
-    
 }
