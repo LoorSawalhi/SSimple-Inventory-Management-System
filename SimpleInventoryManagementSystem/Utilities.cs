@@ -33,16 +33,17 @@ internal static class Utilities
         while (true)
         {
             Console.Write("""
-                            Enter your preferred option:
+                          
+                          Enter your preferred option:
                             
-                            1. Add new product.
-                            2. View all products.
-                            3. Edit a product.
-                            4. Delete a product.
-                            5. Search for a product.
-                            6. Exit.
+                          1. Add new product.
+                          2. View all products.
+                          3. Edit a product.
+                          4. Delete a product.
+                          5. Search for a product.
+                          6. Exit.
                             
-                            Option = 
+                          Option = 
                           """);
 
             var readLine = Console.ReadLine();
@@ -80,7 +81,7 @@ internal static class Utilities
 
     private static void DisplayAddNewProductMenu()
     {
-        var name = ReadString("Enter product name:");
+        var name = ReadString("Enter product name : ");
         var findProduct = Inventory.FindProduct(name);
 
         if (findProduct != null)
@@ -106,7 +107,7 @@ internal static class Utilities
     private static void DisplayAllProducts()
     {
         var i = 1;
-        Console.WriteLine("Inventory Products:");
+        Console.WriteLine("Inventory Products : ");
 
         foreach (var product in Inventory.Products)
         {
@@ -119,33 +120,24 @@ internal static class Utilities
 
     private static void DisplayEditProductList()
     {
+        var product = FindProduct();
+        if (product != null)
+            EditProductList(product);
+    }
+
+    private static void EditProductList(Product? product)
+    {
         while (true)
         {
-            string name;
-            Product? product;
-
-            do
-            {
-                name = ReadString("Enter product name:");
-                product = Inventory.FindProduct(name);
-
-                if (product != null) continue;
-
-                name = "";
-                Console.WriteLine("Product name doesn't exists !! TRY AGAIN");
-                if (ExitCond() == -1)
-                    Menu();
-            } while (name.Length <= 0);
-
             Console.Write("""
-                              Which field would you like to edit : 
-                              1. Name
-                              2. Price
-                              3. Quantity
-                              4.Exit
-                              
-                              Option = 
-                              """);
+                          Which field would you like to edit :
+                          1. Name
+                          2. Price
+                          3. Quantity
+                          4.Exit
+
+                          Option =
+                          """);
 
             var option = Console.ReadLine();
             Console.WriteLine();
@@ -179,13 +171,34 @@ internal static class Utilities
         }
     }
 
+    private static Product? FindProduct()
+    {
+        string name;
+        Product? product;
+
+        do
+        {
+            name = ReadString("Enter product name : ");
+            product = Inventory.FindProduct(name);
+
+            if (product != null) continue;
+
+            name = "";
+            Console.WriteLine("Product name doesn't exists !! TRY AGAIN");
+            if (ExitCond() == -1)
+                Menu();
+        } while (name.Length <= 0);
+
+        return product;
+    }
+
     private static void EditProduct(int i, Product product)
     {
         switch (i)
         {
             case 1:
             {
-                var name = ReadString("Enter product name:");
+                var name = ReadString("Enter product name : ");
 
                 if (name.Equals(product.Name, StringComparison.OrdinalIgnoreCase))
                 {
@@ -241,22 +254,7 @@ internal static class Utilities
 
     private static void DisplayDeleteProduct()
     {
-        string name;
-        Product? product;
-
-        do
-        {
-            name = ReadString("Enter product name:");
-
-            product = Inventory.FindProduct(name);
-
-            if (product != null) continue;
-
-            name = "";
-            Console.WriteLine("Product name doesn't exists !! TRY AGAIN");
-            if (ExitCond() == -1)
-                Menu();
-        } while (name.Length <= 0);
+        var product = FindProduct();
 
         if (product != null)
             Inventory.DeleteProduct(product);
@@ -281,7 +279,7 @@ internal static class Utilities
 
         do
         {
-            name = ReadString("Enter product name:");
+            name = ReadString("Enter product name : ");
 
             product = Inventory.FindProduct(name);
 
