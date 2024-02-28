@@ -6,11 +6,6 @@ public class Product
     private float _price;
     private int _quantity;
 
-    public Product(string name)
-    {
-        Name = name;
-    }
-
     public Product(string name, float price, int quantity)
     {
         _name = name;
@@ -29,7 +24,7 @@ public class Product
         get => _price;
         set
         {
-            if(value > 0)
+            if (value > 0)
                 _price = value;
         }
     }
@@ -39,13 +34,13 @@ public class Product
         get => _quantity;
         set
         {
-            if(value > 0)
+            if (value > 0)
                 _quantity = value;
         }
     }
 
     public override string ToString()
     {
-        return "Name : " + Name + ", Price : " + Price + ", Quantity : " + Quantity + ".";
+        return $"Name : {Name}, Price :  {Price}, Quantity : {Quantity}.";
     }
 }
