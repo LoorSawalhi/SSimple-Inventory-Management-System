@@ -29,7 +29,7 @@ public class Product
         get => _price;
         set
         {
-            if(value > 0)
+            if (value > 0)
                 _price = value;
         }
     }
@@ -39,8 +39,13 @@ public class Product
         get => _quantity;
         set
         {
-            if(value > 0)
+            if (value > 0)
                 _quantity = value;
         }
+    }
+
+    public override string ToString()
+    {
+        return $"Name : {Name}, Price :  {Price}, Quantity : {Quantity}.";
     }
 }

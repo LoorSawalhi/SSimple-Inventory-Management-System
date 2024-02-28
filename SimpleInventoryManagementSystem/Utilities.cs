@@ -1,8 +1,11 @@
+using SimpleInventoryManagementSystem.Domain;
+
 namespace SimpleInventoryManagementSystem;
+
 using Domain.InventoryManagement;
 using Domain.ProductManagement;
 
-public static class Utilities
+internal static class Utilities
 {
     private static Inventory Inventory { get; set; } = new();
 
@@ -24,130 +27,123 @@ public static class Utilities
             ]
         };
     }
-    
+
     internal static void Menu()
     {
-        Console.WriteLine("Enter your preferred option:\n" +
-                          "1. Add new product.\n" +
-                          "2. View all products.\n" +
-                          "3. Edit a product.\n" +
-                          "4. Delete a product.\n" +
-                          "5. Search for a product.\n" +
-                          "6. Exit.\n");
-        
-        var option = Console.ReadLine();
-        int i ;
-    
-        if ( option != null && int.TryParse( option, out i ) )
+        while (true)
         {
-            switch (i)
-            {
-                case 1:
-                    DisplayAddNewProductMenu();
-                    break;
-                case 2:
-                   
-                    break;
-                case 3:
-                    // edit a product
-                    break;
-                case 4:
-                    // delete a product
-                    break;
-                case 5:
-                    // search a product
-                    break;
-                case 6:
-                    return;
-                default:
-                    Console.WriteLine("Invalid Option !!! Try again.");
-                    Menu();
-                    break;
-            }
+            Console.WriteLine("Enter your preferred option:\n" +
+                              "1. Add new product.\n" +
+                              "2. View all products.\n" +
+                              "3. Edit a product.\n" +
+                              "4. Delete a product.\n" +
+                              "5. Search for a product.\n" +
+                              "6. Exit.\n");
 
-        }
-        else
-        {
-            Console.WriteLine("Invalid Option !!! Try again.");
+            var readLine = Console.ReadLine();
+
+            if (readLine != null && int.TryParse(readLine, out var option))
+                switch (option)
+                {
+                    case 1:
+                        DisplayAddNewProductMenu();
+                        break;
+                    case 2:
+
+                        break;
+                    case 3:
+                        // edit a product
+                        break;
+                    case 4:
+                        // delete a product
+                        break;
+                    case 5:
+                        // search a product
+                        break;
+                    case 6:
+                        return;
+                    default:
+                        Console.WriteLine("Invalid Option !!! Try again.");
+                        continue;
+                }
+            else
+                Console.WriteLine("Invalid Option !!! Try again.");
+
+            break;
         }
     }
 
     private static void DisplayAddNewProductMenu()
     {
-        string name;
-        
-        do
-        {
-            Console.Write("Enter product name:");
-            name = Console.ReadLine() ?? string.Empty;
+        var name = ReadString("Enter product name:");
 
-            if (name.Length <= 0)
-            {
-                Console.WriteLine("Empty name field !! TRY AGAIN");
-            }
-        } 
-        while (name.Length <= 0);
+        var findProduct = Inventory.FindProduct(name);
 
-        
-        var p = Inventory.FindProduct( name );
-        
-        if ( p != null )
+        if (findProduct != null)
         {
-          Console.WriteLine( "Product name already exists !!" );  
+          Console.WriteLine("Product name already exists !!");
           DisplayAddNewProductMenu();
         }
         else
         {
-            var price = 0.0f;
-            var quantity = 0;
-            string input;
-
-            do
-            {
-                Console.Write("Enter product price: ");
-                input = Console.ReadLine() ?? string.Empty;
-
-                if (input.Length <= 0)
-                {
-                    Console.WriteLine("Empty price field! TRY AGAIN");
-                }
-                else if ( !float.TryParse(input, out price) || price <= 0 )
-                {
-                    if ((int)price == -1)
-                    {
-                        Menu();
-                    }
-                    
-                    Console.WriteLine("Invalid price! Price must be a number greater than 0. TRY AGAIN");
-                    input = ""; 
-                }
-            } while (input.Length <= 0);
-
-            input = "";
-
-            do
-            {
-                Console.Write("Enter product quantity: ");
-                input = Console.ReadLine() ?? string.Empty;
-
-                if (input.Length <= 0)
-                {
-                    Console.WriteLine("Empty quantity field! TRY AGAIN");
-                }
-                else if (!int.TryParse(input, out quantity) || quantity <= 0)
-                {
-                    Console.WriteLine("Invalid quantity! Quantity must be a number greater than 0. TRY AGAIN");
-                    input = ""; 
-                }
-            } while (input.Length <= 0);
-            
-
+            var price = ReadNumber("Enter new price : ", Number.Float);
+            var quantity = (int)ReadNumber("Enter new quantity : ", Number.Integer);
             var product = new Product(name, price, quantity);
             Inventory.AddNewProduct(product);
-            
+
             Console.WriteLine("Product Added.");
         }
-        
+
         Menu();
+    }
+
+    private static float ReadNumber(string message, Number numberType)
+    {
+        float number;
+        do
+        {
+            var input = ReadLineInput(message);
+
+            if (numberType == Number.Float)
+            {
+                if (float.TryParse(input, out number) && number > 0)
+                    break;
+            }
+            else
+            {
+                if (int.TryParse(input, out var intNumber) && intNumber > 0)
+                {
+                    number = intNumber;
+                    break;
+                }
+            }
+
+            Console.WriteLine("Invalid input! It must be a number greater than 0. TRY AGAIN");
+        } while (true);
+
+        return number;
+    }
+
+    private static string ReadString(string message)
+    {
+        string input;
+        do
+        {
+            input = ReadLineInput(message);
+        } while (input.Length <= 0);
+
+        return input;
+    }
+
+    private static string ReadLineInput(string message)
+    {
+        Console.Write(message);
+        var input = Console.ReadLine() ?? string.Empty;
+
+        Console.WriteLine();
+
+        if (input.Length <= 0) Console.WriteLine("Empty field! TRY AGAIN");
+
+        return input;
     }
 }
