@@ -42,7 +42,7 @@ internal static class Utilities
                             5. Search for a product.
                             6. Exit.
                             
-                            Option =
+                            Option = 
                           """);
 
             var readLine = Console.ReadLine();
@@ -81,12 +81,13 @@ internal static class Utilities
     private static void DisplayAddNewProductMenu()
     {
         var name = ReadString("Enter product name:");
-
         var findProduct = Inventory.FindProduct(name);
 
         if (findProduct != null)
         {
             Console.WriteLine("Product name already exists !!");
+            if (ExitCond() == -1)
+                Menu();
             DisplayAddNewProductMenu();
         }
         else
@@ -126,13 +127,14 @@ internal static class Utilities
             do
             {
                 name = ReadString("Enter product name:");
-
                 product = Inventory.FindProduct(name);
 
                 if (product != null) continue;
 
                 name = "";
                 Console.WriteLine("Product name doesn't exists !! TRY AGAIN");
+                if (ExitCond() == -1)
+                    Menu();
             } while (name.Length <= 0);
 
             Console.Write("""
@@ -146,7 +148,6 @@ internal static class Utilities
                               """);
 
             var option = Console.ReadLine();
-
             Console.WriteLine();
 
             if (option != null && int.TryParse(option, out var i))
@@ -161,12 +162,16 @@ internal static class Utilities
                         break;
                     default:
                         Console.WriteLine("Invalid Option !!! Try again.");
+                        if (ExitCond() == -1)
+                            Menu();
                         continue;
                 }
             }
             else
             {
                 Console.WriteLine("Invalid Option !!! Try again.");
+                if (ExitCond() == -1)
+                    Menu();
                 continue;
             }
 
@@ -249,6 +254,8 @@ internal static class Utilities
 
             name = "";
             Console.WriteLine("Product name doesn't exists !! TRY AGAIN");
+            if (ExitCond() == -1)
+                Menu();
         } while (name.Length <= 0);
 
         if (product != null)
@@ -270,26 +277,15 @@ internal static class Utilities
     private static void DisplaySearchProduct()
     {
         string name;
-        Product? p = null;
+        Product? product;
 
         do
         {
-            Console.WriteLine();
-            Console.Write("Enter product name : ");
-            name = Console.ReadLine() ?? string.Empty;
+            name = ReadString("Enter product name:");
 
-            if (name.Length <= 0)
-            {
-                Console.WriteLine("Empty name field !! TRY AGAIN");
-                if (ExitCond() == -1)
-                    break;
+            product = Inventory.FindProduct(name);
 
-                continue;
-            }
-
-            p = Inventory.FindProduct(name);
-
-            if (p != null) continue;
+            if (product != null) continue;
 
             name = "";
             Console.WriteLine("Product name doesn't exists !! TRY AGAIN");
@@ -298,7 +294,7 @@ internal static class Utilities
                 break;
         } while (name.Length <= 0);
 
-        Console.WriteLine(p?.ToString());
+        Console.WriteLine(product?.ToString());
         Menu();
     }
 
@@ -347,7 +343,12 @@ internal static class Utilities
 
         Console.WriteLine();
 
-        if (input.Length <= 0) Console.WriteLine("Empty field! TRY AGAIN");
+        if (input.Length <= 0)
+        {
+            Console.WriteLine("Empty field! TRY AGAIN");
+            if (ExitCond() == -1)
+                Menu();
+        }
 
         return input;
     }
