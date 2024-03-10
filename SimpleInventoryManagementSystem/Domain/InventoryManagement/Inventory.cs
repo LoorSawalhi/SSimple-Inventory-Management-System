@@ -25,4 +25,11 @@ public class Inventory
         Products.Add(product);
         return Products;
     }
+
+    public List<Product> DeleteProduct(Product product)
+    {
+        Products.Remove(product);
+        Console.WriteLine("Successfully deleted!");
+        return Products;
+    }
 }

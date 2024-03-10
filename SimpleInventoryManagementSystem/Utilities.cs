@@ -32,13 +32,19 @@ internal static class Utilities
     {
         while (true)
         {
-            Console.WriteLine("Enter your preferred option:\n" +
-                              "1. Add new product.\n" +
-                              "2. View all products.\n" +
-                              "3. Edit a product.\n" +
-                              "4. Delete a product.\n" +
-                              "5. Search for a product.\n" +
-                              "6. Exit.\n");
+            Console.Write("""
+                          
+                          Enter your preferred option:
+                            
+                          1. Add new product.
+                          2. View all products.
+                          3. Edit a product.
+                          4. Delete a product.
+                          5. Search for a product.
+                          6. Exit.
+                            
+                          Option = 
+                          """);
 
             var readLine = Console.ReadLine();
 
@@ -49,16 +55,16 @@ internal static class Utilities
                         DisplayAddNewProductMenu();
                         break;
                     case 2:
-
+                        DisplayAllProducts();
                         break;
                     case 3:
-                        // edit a product
+                        DisplayEditProductList();
                         break;
                     case 4:
-                        // delete a product
+                        DisplayDeleteProduct();
                         break;
                     case 5:
-                        // search a product
+                        DisplaySearchProduct();
                         break;
                     case 6:
                         return;
@@ -75,14 +81,15 @@ internal static class Utilities
 
     private static void DisplayAddNewProductMenu()
     {
-        var name = ReadString("Enter product name:");
-
+        var name = ReadString("Enter product name : ");
         var findProduct = Inventory.FindProduct(name);
 
         if (findProduct != null)
         {
-          Console.WriteLine("Product name already exists !!");
-          DisplayAddNewProductMenu();
+            Console.WriteLine("Product name already exists !!");
+            if (ExitCond() == -1)
+                Menu();
+            DisplayAddNewProductMenu();
         }
         else
         {
@@ -94,6 +101,198 @@ internal static class Utilities
             Console.WriteLine("Product Added.");
         }
 
+        Menu();
+    }
+
+    private static void DisplayAllProducts()
+    {
+        var i = 1;
+        Console.WriteLine("Inventory Products : ");
+
+        foreach (var product in Inventory.Products)
+        {
+            Console.WriteLine(i + ". " + product);
+            i += 1;
+        }
+
+        Menu();
+    }
+
+    private static void DisplayEditProductList()
+    {
+        var product = FindProduct();
+        if (product != null)
+            EditProductList(product);
+    }
+
+    private static void EditProductList(Product? product)
+    {
+        while (true)
+        {
+            Console.Write("""
+                          Which field would you like to edit :
+                          1. Name
+                          2. Price
+                          3. Quantity
+                          4.Exit
+
+                          Option =
+                          """);
+
+            var option = Console.ReadLine();
+            Console.WriteLine();
+
+            if (option != null && int.TryParse(option, out var i))
+            {
+                switch (i)
+                {
+                    case < 4 and > 0:
+                        if (product != null) EditProduct(i, product);
+                        break;
+                    case 4:
+                        Menu();
+                        break;
+                    default:
+                        Console.WriteLine("Invalid Option !!! Try again.");
+                        if (ExitCond() == -1)
+                            Menu();
+                        continue;
+                }
+            }
+            else
+            {
+                Console.WriteLine("Invalid Option !!! Try again.");
+                if (ExitCond() == -1)
+                    Menu();
+                continue;
+            }
+
+            break;
+        }
+    }
+
+    private static Product? FindProduct()
+    {
+        string name;
+        Product? product;
+
+        do
+        {
+            name = ReadString("Enter product name : ");
+            product = Inventory.FindProduct(name);
+
+            if (product != null) continue;
+
+            name = "";
+            Console.WriteLine("Product name doesn't exists !! TRY AGAIN");
+            if (ExitCond() == -1)
+                Menu();
+        } while (name.Length <= 0);
+
+        return product;
+    }
+
+    private static void EditProduct(int i, Product product)
+    {
+        switch (i)
+        {
+            case 1:
+            {
+                var name = ReadString("Enter product name : ");
+
+                if (name.Equals(product.Name, StringComparison.OrdinalIgnoreCase))
+                {
+                    Console.WriteLine("You entered the same name, nothing have changed!");
+                }
+                else
+                {
+                    product.Name = name;
+                    Console.WriteLine("Name Updated!");
+                }
+
+                Console.WriteLine(product.ToString());
+                break;
+            }
+            case 2:
+            {
+                var price = ReadNumber("Enter new price : ", Number.Float);
+
+                if (Math.Abs(price - product.Price) < 0.00001)
+                {
+                    Console.WriteLine("You entered the same price, nothing have changed!");
+                }
+                else
+                {
+                    product.Price = price;
+                    Console.WriteLine("Price Updated!");
+                }
+
+                Console.WriteLine(product.ToString());
+                break;
+            }
+            case 3:
+            {
+                var quantity = (int)ReadNumber("Enter new quantity : ", Number.Integer);
+
+                if (quantity == product.Quantity)
+                {
+                    Console.WriteLine("You entered the same quantity, nothing have changed!");
+                }
+                else
+                {
+                    product.Quantity = quantity;
+                    Console.WriteLine("Quantity Updated!");
+                }
+
+                Console.WriteLine(product.ToString());
+                break;
+            }
+        }
+
+        Menu();
+    }
+
+    private static void DisplayDeleteProduct()
+    {
+        var product = FindProduct();
+
+        if (product != null)
+            Inventory.DeleteProduct(product);
+
+        Console.WriteLine();
+        DisplayAllProducts();
+    }
+
+    private static int ExitCond()
+    {
+        Console.Write("To exit type e or E => ");
+        var e = Console.ReadLine() ?? string.Empty;
+        if (e.ToLower().Trim().Equals("e")) return -1;
+
+        return 0;
+    }
+
+    private static void DisplaySearchProduct()
+    {
+        string name;
+        Product? product;
+
+        do
+        {
+            name = ReadString("Enter product name : ");
+
+            product = Inventory.FindProduct(name);
+
+            if (product != null) continue;
+
+            name = "";
+            Console.WriteLine("Product name doesn't exists !! TRY AGAIN");
+
+            if (ExitCond() == -1)
+                break;
+        } while (name.Length <= 0);
+
+        Console.WriteLine(product?.ToString());
         Menu();
     }
 
@@ -142,7 +341,12 @@ internal static class Utilities
 
         Console.WriteLine();
 
-        if (input.Length <= 0) Console.WriteLine("Empty field! TRY AGAIN");
+        if (input.Length <= 0)
+        {
+            Console.WriteLine("Empty field! TRY AGAIN");
+            if (ExitCond() == -1)
+                Menu();
+        }
 
         return input;
     }
