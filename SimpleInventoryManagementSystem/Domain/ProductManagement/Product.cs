@@ -1,11 +1,22 @@
 namespace SimpleInventoryManagementSystem.Domain.ProductManagement;
 
-public class Product(string name, float price, int quantity)
+public class Product
 {
-    private string _name = name ;
-    private float _price = price;
-    private int _quantity = quantity;
+    private string _name;
+    private float _price;
+    private int _quantity;
 
+    public Product(string name)
+    {
+        Name = name;
+    }
+
+    public Product(string name, float price, int quantity)
+    {
+        _name = name;
+        _price = price;
+        _quantity = quantity;
+    }
 
     public string Name
     {
@@ -18,7 +29,7 @@ public class Product(string name, float price, int quantity)
         get => _price;
         set
         {
-            if(value > 0)
+            if (value > 0)
                 _price = value;
         }
     }
@@ -28,8 +39,13 @@ public class Product(string name, float price, int quantity)
         get => _quantity;
         set
         {
-            if(value > 0)
+            if (value > 0)
                 _quantity = value;
         }
+    }
+
+    public override string ToString()
+    {
+        return $"Name : {Name}, Price :  {Price}, Quantity : {Quantity}.";
     }
 }

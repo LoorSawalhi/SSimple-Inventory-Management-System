@@ -1,5 +1,5 @@
 ﻿using SimpleInventoryManagementSystem;
 
-Utilities.InitiallizeInventory();
+Utilities.InitializeInventory();
 Utilities.Menu();
 
