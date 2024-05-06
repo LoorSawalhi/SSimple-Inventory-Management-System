@@ -59,8 +59,8 @@ public class InputHandeller
         if (input.Length <= 0)
         {
             Console.WriteLine("Empty field! TRY AGAIN");
-            if (ExitCond() == -1)
-                Utilities.Menu();
+            // if (ExitCond() == -1)
+            //     Utilities.Menu();
         }
 
         return input;

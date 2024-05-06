@@ -5,9 +5,17 @@ namespace SimpleInventoryManagementSystem;
 using Domain.InventoryManagement;
 using Domain.ProductManagement;
 
-internal static class Utilities
+public class Utilities
 {
+    private ProductManagement _productManagement;
+
+    public Utilities(ProductManagement productManagement)
+    {
+        _productManagement = productManagement;
+    }
+
     private static Inventory Inventory { get; set; } = new();
+
 
     internal static void InitializeInventory()
     {
@@ -28,7 +36,7 @@ internal static class Utilities
         };
     }
 
-    internal static void Menu()
+    internal void Menu()
     {
         while (true)
         {
@@ -79,10 +87,10 @@ internal static class Utilities
         }
     }
 
-    private static void DisplayAddNewProductMenu()
+    private void DisplayAddNewProductMenu()
     {
         var name = InputHandeller.ReadString("Enter product name : ");
-        var findProduct = Inventory.FindProduct(name);
+        var findProduct = _productManagement.FindProduct(name);
 
         if (findProduct != null)
         {
@@ -96,7 +104,7 @@ internal static class Utilities
             var price = InputHandeller.ReadNumber("Enter new price : ", Number.Float);
             var quantity = (int)InputHandeller.ReadNumber("Enter new quantity : ", Number.Integer);
             var product = new Product(name, price, quantity);
-            Inventory.AddNewProduct(product);
+            _productManagement.AddNewProduct(product);
 
             Console.WriteLine("Product Added.");
         }
@@ -104,7 +112,7 @@ internal static class Utilities
         Menu();
     }
 
-    private static void DisplayAllProducts()
+    private void DisplayAllProducts()
     {
         var i = 1;
         Console.WriteLine("Inventory Products : ");
@@ -118,14 +126,14 @@ internal static class Utilities
         Menu();
     }
 
-    private static void DisplayEditProductList()
+    private void DisplayEditProductList()
     {
         var product = FindProduct();
         if (product != null)
             EditProductList(product);
     }
 
-    private static void EditProductList(Product? product)
+    private void EditProductList(Product? product)
     {
         while (true)
         {
@@ -171,7 +179,7 @@ internal static class Utilities
         }
     }
 
-    private static Product? FindProduct()
+    private Product? FindProduct()
     {
         string name;
         Product? product;
@@ -179,7 +187,7 @@ internal static class Utilities
         do
         {
             name = InputHandeller.ReadString("Enter product name : ");
-            product = Inventory.FindProduct(name);
+            product = _productManagement.FindProduct(name);
 
             if (product != null) continue;
 
@@ -192,7 +200,7 @@ internal static class Utilities
         return product;
     }
 
-    private static void EditProduct(int i, Product product)
+    private void EditProduct(int i, Product product)
     {
         switch (i)
         {
@@ -252,18 +260,18 @@ internal static class Utilities
         Menu();
     }
 
-    private static void DisplayDeleteProduct()
+    private void DisplayDeleteProduct()
     {
         var product = FindProduct();
 
         if (product != null)
-            Inventory.DeleteProduct(product);
+            _productManagement.DeleteProduct(product);
 
         Console.WriteLine();
         DisplayAllProducts();
     }
 
-    private static void DisplaySearchProduct()
+    private void DisplaySearchProduct()
     {
         string name;
         Product? product;
@@ -272,7 +280,7 @@ internal static class Utilities
         {
             name = InputHandeller.ReadString("Enter product name : ");
 
-            product = Inventory.FindProduct(name);
+            product = _productManagement.FindProduct(name);
 
             if (product != null) continue;
 
