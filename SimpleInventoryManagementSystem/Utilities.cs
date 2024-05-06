@@ -81,20 +81,20 @@ internal static class Utilities
 
     private static void DisplayAddNewProductMenu()
     {
-        var name = ReadString("Enter product name : ");
+        var name = InputHandeller.ReadString("Enter product name : ");
         var findProduct = Inventory.FindProduct(name);
 
         if (findProduct != null)
         {
             Console.WriteLine("Product name already exists !!");
-            if (ExitCond() == -1)
+            if (InputHandeller.ExitCond() == -1)
                 Menu();
             DisplayAddNewProductMenu();
         }
         else
         {
-            var price = ReadNumber("Enter new price : ", Number.Float);
-            var quantity = (int)ReadNumber("Enter new quantity : ", Number.Integer);
+            var price = InputHandeller.ReadNumber("Enter new price : ", Number.Float);
+            var quantity = (int)InputHandeller.ReadNumber("Enter new quantity : ", Number.Integer);
             var product = new Product(name, price, quantity);
             Inventory.AddNewProduct(product);
 
@@ -154,7 +154,7 @@ internal static class Utilities
                         break;
                     default:
                         Console.WriteLine("Invalid Option !!! Try again.");
-                        if (ExitCond() == -1)
+                        if (InputHandeller.ExitCond() == -1)
                             Menu();
                         continue;
                 }
@@ -162,7 +162,7 @@ internal static class Utilities
             else
             {
                 Console.WriteLine("Invalid Option !!! Try again.");
-                if (ExitCond() == -1)
+                if (InputHandeller.ExitCond() == -1)
                     Menu();
                 continue;
             }
@@ -178,14 +178,14 @@ internal static class Utilities
 
         do
         {
-            name = ReadString("Enter product name : ");
+            name = InputHandeller.ReadString("Enter product name : ");
             product = Inventory.FindProduct(name);
 
             if (product != null) continue;
 
             name = "";
             Console.WriteLine("Product name doesn't exists !! TRY AGAIN");
-            if (ExitCond() == -1)
+            if (InputHandeller.ExitCond() == -1)
                 Menu();
         } while (name.Length <= 0);
 
@@ -198,7 +198,7 @@ internal static class Utilities
         {
             case 1:
             {
-                var name = ReadString("Enter product name : ");
+                var name = InputHandeller.ReadString("Enter product name : ");
 
                 if (name.Equals(product.Name, StringComparison.OrdinalIgnoreCase))
                 {
@@ -215,7 +215,7 @@ internal static class Utilities
             }
             case 2:
             {
-                var price = ReadNumber("Enter new price : ", Number.Float);
+                var price = InputHandeller.ReadNumber("Enter new price : ", Number.Float);
 
                 if (Math.Abs(price - product.Price) < 0.00001)
                 {
@@ -232,7 +232,7 @@ internal static class Utilities
             }
             case 3:
             {
-                var quantity = (int)ReadNumber("Enter new quantity : ", Number.Integer);
+                var quantity = (int)InputHandeller.ReadNumber("Enter new quantity : ", Number.Integer);
 
                 if (quantity == product.Quantity)
                 {
@@ -263,15 +263,6 @@ internal static class Utilities
         DisplayAllProducts();
     }
 
-    private static int ExitCond()
-    {
-        Console.Write("To exit type e or E => ");
-        var e = Console.ReadLine() ?? string.Empty;
-        if (e.ToLower().Trim().Equals("e")) return -1;
-
-        return 0;
-    }
-
     private static void DisplaySearchProduct()
     {
         string name;
@@ -279,7 +270,7 @@ internal static class Utilities
 
         do
         {
-            name = ReadString("Enter product name : ");
+            name = InputHandeller.ReadString("Enter product name : ");
 
             product = Inventory.FindProduct(name);
 
@@ -288,66 +279,11 @@ internal static class Utilities
             name = "";
             Console.WriteLine("Product name doesn't exists !! TRY AGAIN");
 
-            if (ExitCond() == -1)
+            if (InputHandeller.ExitCond() == -1)
                 break;
         } while (name.Length <= 0);
 
         Console.WriteLine(product?.ToString());
         Menu();
-    }
-
-    private static float ReadNumber(string message, Number numberType)
-    {
-        float number;
-        do
-        {
-            var input = ReadLineInput(message);
-
-            if (numberType == Number.Float)
-            {
-                if (float.TryParse(input, out number) && number > 0)
-                    break;
-            }
-            else
-            {
-                if (int.TryParse(input, out var intNumber) && intNumber > 0)
-                {
-                    number = intNumber;
-                    break;
-                }
-            }
-
-            Console.WriteLine("Invalid input! It must be a number greater than 0. TRY AGAIN");
-        } while (true);
-
-        return number;
-    }
-
-    private static string ReadString(string message)
-    {
-        string input;
-        do
-        {
-            input = ReadLineInput(message);
-        } while (input.Length <= 0);
-
-        return input;
-    }
-
-    private static string ReadLineInput(string message)
-    {
-        Console.Write(message);
-        var input = Console.ReadLine() ?? string.Empty;
-
-        Console.WriteLine();
-
-        if (input.Length <= 0)
-        {
-            Console.WriteLine("Empty field! TRY AGAIN");
-            if (ExitCond() == -1)
-                Menu();
-        }
-
-        return input;
     }
 }
