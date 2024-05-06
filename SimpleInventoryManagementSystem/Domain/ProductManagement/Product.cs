@@ -1,5 +1,6 @@
 namespace SimpleInventoryManagementSystem.Domain.ProductManagement;
 
+
 public class Product
 {
     private string _name;
@@ -44,3 +45,4 @@ public class Product
         return $"Name : {Name}, Price :  {Price}, Quantity : {Quantity}.";
     }
 }
+
