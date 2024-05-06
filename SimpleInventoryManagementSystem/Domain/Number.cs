@@ -1,6 +1,6 @@
 namespace SimpleInventoryManagementSystem.Domain;
 
-internal enum Number
+public enum Number
 {
     Float,
     Integer
