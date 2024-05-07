@@ -16,26 +16,27 @@ public class Utilities
 
     private static Inventory Inventory { get; set; } = new();
 
-    internal static void InitializeInventory()
+    internal void InitializeInventory()
     {
-        Inventory = new Inventory
+        List<Product> products =
+        [
+            new Product("Laptop", 1500.00f, 10),
+            new Product("Smartphone", 800.00f, 20),
+            new Product("Tablet", 500.00f, 15),
+            new Product("Phone", 10.00f, 10),
+            new Product("Bottle", 20.00f, 20),
+            new Product("Screen", 30.00f, 15),
+            new Product("Car", 1580.00f, 10),
+            new Product("Door", 870.00f, 20),
+            new Product("Glasses", 300.00f, 15)];
+
+        foreach (var product in products)
         {
-            Products =
-            [
-                new Product("Laptop", 1500.00f, 10),
-                new Product("Smartphone", 800.00f, 20),
-                new Product("Tablet", 500.00f, 15),
-                new Product("Phone", 10.00f, 10),
-                new Product("Bottle", 20.00f, 20),
-                new Product("Screen", 30.00f, 15),
-                new Product("Car", 1580.00f, 10),
-                new Product("Door", 870.00f, 20),
-                new Product("Glasses", 300.00f, 15)
-            ]
-        };
+            _productManagement.AddNewProduct(product);
+        }
     }
 
-    internal void Menu()
+    public void Menu()
     {
         while (true)
         {
@@ -86,7 +87,7 @@ public class Utilities
         }
     }
 
-    private static void DisplayAddNewProductMenu()
+    private void DisplayAddNewProductMenu()
     {
         var name = InputHandeller.ReadString("Enter product name : ");
         var findProduct = _productManagement.FindProduct(name);
@@ -111,7 +112,7 @@ public class Utilities
         Menu();
     }
 
-    private static void DisplayAllProducts()
+    private void DisplayAllProducts()
     {
         var i = 1;
         Console.WriteLine("Inventory Products : ");
@@ -125,14 +126,14 @@ public class Utilities
         Menu();
     }
 
-    private static void DisplayEditProductList()
+    private void DisplayEditProductList()
     {
         var product = FindProduct();
         if (product != null)
             EditProductList(product);
     }
 
-    private static void EditProductList(Product? product)
+    private void EditProductList(Product? product)
     {
         while (true)
         {
@@ -178,7 +179,7 @@ public class Utilities
         }
     }
 
-    private static Product? FindProduct()
+    private Product? FindProduct()
     {
         string name;
         Product? product;
@@ -199,7 +200,7 @@ public class Utilities
         return product;
     }
 
-    private static void EditProduct(int i, Product product)
+    private void EditProduct(int i, Product product)
     {
         switch (i)
         {
@@ -259,7 +260,7 @@ public class Utilities
         Menu();
     }
 
-    private static void DisplayDeleteProduct()
+    private void DisplayDeleteProduct()
     {
         var product = FindProduct();
 
@@ -270,7 +271,7 @@ public class Utilities
         DisplayAllProducts();
     }
 
-    private static void DisplaySearchProduct()
+    private void DisplaySearchProduct()
     {
         string name;
         Product? product;
