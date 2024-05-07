@@ -7,7 +7,7 @@ using Domain.ProductManagement;
 
 public class Utilities
 {
-    private ProductManagement _productManagement;
+    private readonly ProductManagement _productManagement;
 
     public Utilities(ProductManagement productManagement)
     {
@@ -17,12 +17,9 @@ public class Utilities
     private static Inventory Inventory { get; set; } = new();
 
 
-    internal static void InitializeInventory()
+    public void InitializeInventory()
     {
-        Inventory = new Inventory
-        {
-            Products =
-            [
+       List<Product> Products =[
                 new Product("Laptop", 1500.00f, 10),
                 new Product("Smartphone", 800.00f, 20),
                 new Product("Tablet", 500.00f, 15),
@@ -31,12 +28,15 @@ public class Utilities
                 new Product("Screen", 30.00f, 15),
                 new Product("Car", 1580.00f, 10),
                 new Product("Door", 870.00f, 20),
-                new Product("Glasses", 300.00f, 15)
-            ]
-        };
+                new Product("Glasses", 300.00f, 15)];
+
+       foreach (var product in Products)
+       {
+           _productManagement.AddNewProduct(product);
+       }
     }
 
-    internal void Menu()
+    public void Menu()
     {
         while (true)
         {
