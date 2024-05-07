@@ -1,26 +1,25 @@
-using System.Data.SqlClient;
 using Microsoft.Extensions.Configuration;
+using MongoDB.Bson;
+using MongoDB.Driver;
+using SimpleInventoryManagementSystem.Domain.ProductManagement;
 
 namespace SimpleInventoryManagementSystem.Domain.Database;
 
-public class DatabaseService : IDatabaseService
+public class DatabaseService
 {
-    private readonly string _connectionString;
+    public IMongoCollection<BsonDocument> Collection { get; }
 
     public DatabaseService(IConfiguration configuration)
     {
-        _connectionString = configuration.GetConnectionString("DefaultConnection");
+        var connectionString = configuration.GetConnectionString("DefaultConnection");
+        var client = new MongoClient(connectionString);
+
+        Collection = client.GetDatabase("inventory-system").GetCollection<BsonDocument>("foothill_training");
     }
 
-    public void ExecuteCommand(string commandText)
+    public List<Product> ProductsList(IEnumerable<BsonDocument> documents)
     {
-        using (var connection = new SqlConnection(_connectionString))
-        {
-            connection.Open();
-            using (var command = new SqlCommand(commandText, connection))
-            {
-                command.ExecuteNonQuery();
-            }
-        }
+        return documents.Select(document => new Product(document["name"].AsString,
+            (float)document["price"].ToDouble(), document["quantity"].AsInt32)).ToList();
     }
 }
