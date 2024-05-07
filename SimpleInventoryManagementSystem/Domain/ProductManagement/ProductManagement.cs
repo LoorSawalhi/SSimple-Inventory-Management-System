@@ -20,20 +20,34 @@ public class ProductManagement
 
     public Product? FindProduct(string name)
     {
-        name = name.ToLower();
-        return Products.FirstOrDefault(product => product.Name.ToLower().Equals(name));
+        var products = _databaseService.GetQueryResults($"""
+                                         SELECT *
+                                         FROM product
+                                         WHERE name = '{name}'
+                                         """);
+
+        return products[0];
     }
 
     public List<Product> AddNewProduct(Product product)
     {
-        Products.Add(product);
-        return Products;
+        _databaseService.ExecuteCommand($"""
+                                        INSERT INTO product 
+                                        VALUES ('{product.Name}',{product.Price}, {product.Quantity})
+                                        """);
+        var products = _databaseService.GetQueryResults("SELECT * FROM product");
+        return products;
     }
 
     public List<Product> DeleteProduct(Product product)
     {
-        Products.Remove(product);
-        Console.WriteLine("Successfully deleted!");
-        return Products;
+        var tempProduct = FindProduct(product.Name);
+
+        _databaseService.ExecuteCommand($"""
+                                         DELETE FROM product 
+                                         WHERE id = {tempProduct.Id}
+                                         """);
+        var products = _databaseService.GetQueryResults("SELECT * FROM product");
+        return products;
     }
 }

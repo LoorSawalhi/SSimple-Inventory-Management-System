@@ -3,6 +3,7 @@ namespace SimpleInventoryManagementSystem.Domain.ProductManagement;
 
 public class Product
 {
+    private int _id;
     private string _name;
     private float _price;
     private int _quantity;
@@ -14,10 +15,24 @@ public class Product
         _quantity = quantity;
     }
 
+    public Product(string name, float price, int quantity, int id)
+    {
+        _name = name;
+        _price = price;
+        _quantity = quantity;
+        _id = id;
+    }
+
     public string Name
     {
         get => _name;
         set => _name = value.ToLower().Trim();
+    }
+
+    public int Id
+    {
+        get => _id;
+        set => _id = value;
     }
 
     public float Price
