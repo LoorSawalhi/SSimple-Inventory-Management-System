@@ -1,10 +1,12 @@
+using MongoDB.Bson;
+using MongoDB.Driver;
 using SimpleInventoryManagementSystem.Domain.Database;
 
 namespace SimpleInventoryManagementSystem.Domain.ProductManagement;
 
 public class ProductManagement
 {
-    private readonly IDatabaseService _databaseService;
+    private readonly DatabaseService _databaseService;
     private List<Product> _products = [];
 
     public List<Product> Products
@@ -13,27 +15,43 @@ public class ProductManagement
         set => _products = value;
     }
 
-    public ProductManagement(IDatabaseService databaseService)
+    public ProductManagement(DatabaseService databaseService)
     {
         _databaseService = databaseService;
     }
 
     public Product? FindProduct(string name)
     {
-        name = name.ToLower();
-        return Products.FirstOrDefault(product => product.Name.ToLower().Equals(name));
+        var filter = Builders<BsonDocument>.Filter.Eq("name", name);
+        var document = _databaseService.Collection.Find(filter).ToList();
+        var products = _databaseService.ProductsList(document);
+        return products.Count == 0 ? null : products[0];
     }
 
     public List<Product> AddNewProduct(Product product)
     {
-        Products.Add(product);
-        return Products;
+        var doc = new BsonDocument
+        {
+            { "name", product.Name },
+            { "price", product.Price },
+            { "quantity", product.Quantity }
+        };
+        _databaseService.Collection.InsertOne(doc);
+        return AllProducts();
+    }
+
+    public List<Product> AllProducts()
+    {
+        var products = _databaseService.Collection.Find(new BsonDocument()).ToList();
+        return _databaseService.ProductsList(products);
     }
 
     public List<Product> DeleteProduct(Product product)
     {
-        Products.Remove(product);
-        Console.WriteLine("Successfully deleted!");
-        return Products;
+        var filter = Builders<BsonDocument>.Filter.Eq("name", product.Name);
+        _databaseService.Collection.DeleteOne(filter);
+
+        var products = _databaseService.Collection.Find(new BsonDocument()).ToList();
+        return _databaseService.ProductsList(products);
     }
 }
