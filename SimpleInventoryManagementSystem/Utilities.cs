@@ -13,9 +13,7 @@ public class Utilities
     {
         _productManagement = productManagement;
     }
-
-    private static Inventory Inventory { get; set; } = new();
-
+    
     internal void InitializeInventory()
     {
         List<Product> products =
@@ -117,7 +115,8 @@ public class Utilities
         var i = 1;
         Console.WriteLine("Inventory Products : ");
 
-        foreach (var product in Inventory.Products)
+        var products = _productManagement.AllProducts();
+        foreach (var product in products)
         {
             Console.WriteLine(i + ". " + product);
             i += 1;
