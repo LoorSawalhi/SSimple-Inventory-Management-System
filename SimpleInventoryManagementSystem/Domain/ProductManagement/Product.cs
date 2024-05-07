@@ -1,8 +1,10 @@
-namespace SimpleInventoryManagementSystem.Domain.ProductManagement;
+using MongoDB.Bson;
 
+namespace SimpleInventoryManagementSystem.Domain.ProductManagement;
 
 public class Product
 {
+    public int Id { get; set; }
     private string _name;
     private float _price;
     private int _quantity;
