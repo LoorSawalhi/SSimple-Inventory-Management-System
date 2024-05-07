@@ -116,8 +116,8 @@ public class Utilities
     {
         var i = 1;
         Console.WriteLine("Inventory Products : ");
-
-        foreach (var product in Inventory.Products)
+        var products = _productManagement.ListAllProducts();
+        foreach (var product in products)
         {
             Console.WriteLine(i + ". " + product);
             i += 1;

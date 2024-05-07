@@ -5,17 +5,16 @@ namespace SimpleInventoryManagementSystem.Domain.ProductManagement;
 public class ProductManagement
 {
     private readonly IDatabaseService _databaseService;
-    private List<Product> _products = [];
-
-    public List<Product> Products
-    {
-        get => _products;
-        set => _products = value;
-    }
 
     public ProductManagement(IDatabaseService databaseService)
     {
         _databaseService = databaseService;
+    }
+
+    public List<Product> ListAllProducts()
+    {
+        var products = _databaseService.GetQueryResults("SELECT * FROM product");
+        return products;
     }
 
     public Product? FindProduct(string name)
@@ -25,8 +24,7 @@ public class ProductManagement
                                          FROM product
                                          WHERE name = '{name}'
                                          """);
-
-        return products[0];
+        return products.Count == 0 ? null : products[0];
     }
 
     public List<Product> AddNewProduct(Product product)

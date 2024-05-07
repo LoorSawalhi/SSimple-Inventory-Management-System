@@ -15,7 +15,7 @@ public class Product
         _quantity = quantity;
     }
 
-    public Product(string name, float price, int quantity, int id)
+    public Product(int id,string name, float price, int quantity )
     {
         _name = name;
         _price = price;

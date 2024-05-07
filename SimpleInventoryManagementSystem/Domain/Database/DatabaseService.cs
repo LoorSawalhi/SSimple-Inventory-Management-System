@@ -40,6 +40,7 @@ public class DatabaseService : IDatabaseService
                     while (reader.Read())
                     {
                         var product = new Product(
+                            reader.GetInt32(0),
                             reader.GetString(1),
                             (float)reader.GetDouble(2),
                             reader.GetInt32(3)
